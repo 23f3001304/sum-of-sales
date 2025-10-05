@@ -1,4 +1,4 @@
-name: CI with Cache
+name: CI with Pip Cache
 
 on:
   push:
@@ -13,18 +13,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v4
+      - name: Set up Python with cached dependencies
+        uses: actions/setup-python@v5
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          python-version: '3.11'
+          # This automatically handles caching of pip packages
+          cache: 'pip'
 
       - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run tests
-        run: npm test
+        # Replace this with your actual test command
+        run: python -m unittest discover
