@@ -19,19 +19,16 @@ jobs:
           node-version: '20'
 
       - name: Cache node_modules
-        id: cache-deps # Give the step an ID to reference its output
+        id: cache-deps
         uses: actions/cache@v4
         with:
-          # The directory to cache
           path: node_modules
-          # The specific key you requested
           key: cache-dd4245f
 
       - name: prime-cache-dd4245f
         run: echo "The cache-hit property is: ${{ steps.cache-deps.outputs.cache-hit }}"
 
       - name: Install dependencies if cache missed
-        # This is the crucial step: only run 'npm install' if the cache was not restored.
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm install html-lint
 
