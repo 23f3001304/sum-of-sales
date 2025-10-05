@@ -1,0 +1,32 @@
+name: CI with Cache
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: cache-dd4245f-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cache-dd4245f-
+
+      - name: prime-cache-dd4245f
+        run: echo "Cache result: ${{ steps.cache-deps.outputs.cache-hit }}"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
