@@ -2,9 +2,9 @@ name: CI with Cache Priming
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-lint:
@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Cache node_modules
-        id: cache-deps # Give the step an ID to reference its output
+        id: cache-deps  # Give the step an ID to reference its output
         uses: actions/cache@v4
         with:
           # The directory to cache
@@ -28,10 +28,13 @@ jobs:
           key: cache-dd4245f
 
       - name: prime-cache-dd4245f
-        run: echo 'The cache-hit property is:' ${{ steps.cache-deps.outputs.cache-hit }}
+        run: |
+          echo 'The cache-hit property is:' \
+            ${{ steps.cache-deps.outputs.cache-hit }}
 
       - name: Install dependencies if cache missed
-        # This is the crucial step: only run 'npm install' if the cache was not restored.
+        # This is the crucial step: only run 'npm install' if the
+        # cache was not restored.
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm install html-lint
 
