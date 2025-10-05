@@ -19,8 +19,7 @@ jobs:
         with:
           path: node_modules
           key: cache-dd4245f-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            cache-dd4245f-
+          restore-keys: cache-dd4245f-
 
       - name: prime-cache-dd4245f
         run: echo "Cache result: ${{ steps.cache-deps.outputs.cache-hit }}"
